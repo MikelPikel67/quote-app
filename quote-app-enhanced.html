@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote of the Day ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated background particles */
+    .bg-decoration {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .floating-shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .circle {
+      border-radius: 50%;
+      background: white;
+    }
+
+    .square {
+      background: white;
+      transform: rotate(45deg);
+    }
+
+    .star {
+      background: white;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(180deg); }
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    h1 {
+      color: white;
+      font-size: 48px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: titlePulse 3s infinite ease-in-out;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 18px;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .tab-button {
+      padding: 10px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .tab-button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .tab-button.active {
+      background: white;
+      color: #667eea;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .quote-card {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: visible;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .quote-card::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      background: linear-gradient(45deg, #ff6b6b, #f06595, #cc5de8, #845ef7, #5c7cfa, #339af0, #22b8cf, #20c997);
+      background-size: 400% 400%;
+      border-radius: 20px;
+      z-index: -1;
+      animation: gradientShift 8s ease infinite;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .quote-card:hover::before {
+      opacity: 1;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Decorative quote marks */
+    .quote-text::before {
+      content: '"';
+      position: absolute;
+      font-size: 120px;
+      color: rgba(102, 126, 234, 0.1);
+      top: -20px;
+      left: -10px;
+      font-family: Georgia, serif;
+    }
+
+    .quote-text {
+      font-size: 28px;
+      line-height: 1.6;
+      color: #2d3748;
+      margin-bottom: 25px;
+      font-style: italic;
+      position: relative;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .quote-author {
+      font-size: 20px;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 30px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-favorite {
+      border: 2px solid #f56565;
+      background: white;
+      color: #f56565;
+    }
+
+    .btn-favorite:hover {
+      background: #f56565;
+      color: white;
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    .btn-favorite.favorited {
+      background: #f56565;
+      color: white;
+      animation: heartBeat 0.5s ease;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.15); }
+      50% { transform: scale(1.05); }
+      75% { transform: scale(1.1); }
+    }
+
+    /* Particle animations */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 24px;
+      animation: particleRise 2s ease-out forwards;
+      z-index: 10;
+    }
+
+    @keyframes particleRise {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-100px) rotate(180deg) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-200px) rotate(360deg) scale(0.5);
+      }
+    }
+
+    /* Confetti animation */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      animation: confettiFall 3s ease-out forwards;
+      z-index: 10;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(500px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Sparkle effect */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: sparkleAnimation 1.5s ease-out forwards;
+      z-index: 10;
+      box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes sparkleAnimation {
+      0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Wave effect */
+    .wave {
+      position: absolute;
+      border: 3px solid rgba(102, 126, 234, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: waveExpand 1.5s ease-out forwards;
+      z-index: 5;
+    }
+
+    @keyframes waveExpand {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+
+    .favorites-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      min-height: 400px;
+    }
+
+    .favorites-title {
+      font-size: 32px;
+      color: #2d3748;
+      margin-bottom: 30px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #a0aec0;
+    }
+
+    .empty-state .heart-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      opacity: 0.3;
+      animation: floatHeart 3s infinite ease-in-out;
+    }
+
+    @keyframes floatHeart {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .empty-state p {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .favorite-item {
+      padding: 25px;
+      background: linear-gradient(135deg, #f6f8fb 0%, #f0f4f8 100%);
+      border-radius: 15px;
+      border-left: 4px solid #667eea;
+      position: relative;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .favorite-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .favorite-text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #2d3748;
+      margin-bottom: 12px;
+      font-style: italic;
+      padding-right: 40px;
+    }
+
+    .favorite-author {
+      font-size: 16px;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #f56565;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .delete-btn:hover {
+      background: rgba(245, 101, 101, 0.1);
+      transform: rotate(90deg) scale(1.1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Icon styles */
+    .icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .icon-heart-fill {
+      fill: currentColor;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 36px;
+      }
+      
+      .quote-text {
+        font-size: 22px;
+      }
+      
+      .quote-card {
+        padding: 30px 25px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated background decorations -->
+  <div class="bg-decoration">
+    <div class="floating-shape circle" style="width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="floating-shape square" style="width: 60px; height: 60px; top: 70%; left: 80%; animation-delay: 2s;"></div>
+    <div class="floating-shape star" style="width: 50px; height: 50px; top: 20%; left: 85%; animation-delay: 4s;"></div>
+    <div class="floating-shape circle" style="width: 100px; height: 100px; top: 60%; left: 5%; animation-delay: 1s;"></div>
+    <div class="floating-shape star" style="width: 70px; height: 70px; top: 40%; left: 90%; animation-delay: 3s;"></div>
+    <div class="floating-shape square" style="width: 50px; height: 50px; top: 85%; left: 15%; animation-delay: 5s;"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>✨ Quote of the Day ✨</h1>
+      <div class="subtitle">Inspiration, one quote at a time</div>
+      <div class="tab-buttons">
+        <button class="tab-button active" id="dailyTab">
+          <span style="position: relative; z-index: 1;">Daily Quote</span>
+        </button>
+        <button class="tab-button" id="favoritesTab">
+          <span style="position: relative; z-index: 1;">Favorites (<span id="favCount">0</span>)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quote View -->
+    <div id="quoteView">
+      <div class="quote-card">
+        <div class="quote-text" id="quoteText">
+          "Click 'New Quote' to get inspired!"
+        </div>
+        <div class="quote-author" id="quoteAuthor">
+          — The Universe
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="newQuoteBtn">
+            <svg class="icon" viewBox="0 0 24 24">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            New Quote
+          </button>
+
+          <button class="btn btn-favorite" id="favoriteBtn">
+            <svg class="icon" id="heartIcon" viewBox="0 0 24 24">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span id="favoriteText">Add to Favorites</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites View -->
+    <div id="favoritesView" class="hidden">
+      <div class="favorites-container">
+        <h2 class="favorites-title">💜 Your Favorite Quotes</h2>
+
+        <div id="favoritesList">
+          <div class="empty-state">
+            <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <p>No favorites yet!</p>
+            <p style="font-size: 16px; margin-top: 10px;">
+              Start adding quotes you love by clicking the heart button.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+      { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+      { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+      { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+      { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+      { text: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+      { text: "So many books, so little time.", author: "Frank Zappa" },
+      { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero" },
+      { text: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
+      { text: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+      { text: "To live is the rarest thing in the world. Most people exist, that is all.", author: "Oscar Wilde" },
+      { text: "Insanity is doing the same thing, over and over again, but expecting different results.", author: "Albert Einstein" },
+      { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas Edison" },
+      { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+      { text: "Everything you can imagine is real.", author: "Pablo Picasso" },
+      { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+      { text: "Life isn't about finding yourself. Life is about creating yourself.", author: "George Bernard Shaw" },
+      { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+      { text: "I'm not arguing, I'm just explaining why I'm right.", author: "Anonymous" },
+      { text: "The road to success is dotted with many tempting parking spaces.", author: "Will Rogers" },
+      { text: "Knowledge speaks, but wisdom listens.", author: "Jimi Hendrix" },
+      { text: "The mind is everything. What you think you become.", author: "Buddha" },
+      { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama" },
+      { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+      { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+      { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+      { text: "The future starts today, not tomorrow.", author: "Pope John Paul II" },
+      { text: "It's not whether you get knocked down, it's whether you get up.", author: "Vince Lombardi" },
+      { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+      { text: "The only limit to our realization of tomorrow will be our doubts of today.", author: "Franklin D. Roosevelt" }
+    ];
+
+    let currentQuote = null;
+    let favorites = [];
+
+    // Load favorites from localStorage
+    function loadFavorites() {
+      const stored = localStorage.getItem('quoteAppFavorites');
+      if (stored) {
+        favorites = JSON.parse(stored);
+        updateFavoritesCount();
+        renderFavorites();
+      }
+    }
+
+    // Save favorites to localStorage
+    function saveFavorites() {
+      localStorage.setItem('quoteAppFavorites', JSON.stringify(favorites));
+      updateFavoritesCount();
+    }
+
+    // Update favorites count in tab
+    function updateFavoritesCount() {
+      document.getElementById('favCount').textContent = favorites.length;
+    }
+
+    // Get random quote
+    function getRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      currentQuote = quotes[randomIndex];
+      displayQuote();
+      createAnimations();
+    }
+
+    // Display quote with animation
+    function displayQuote() {
+      const quoteText = document.getElementById('quoteText');
+      const quoteAuthor = document.getElementById('quoteAuthor');
+      
+      // Reset animation
+      quoteText.style.animation = 'none';
+      quoteAuthor.style.animation = 'none';
+      
+      setTimeout(() => {
+        quoteText.textContent = `"${currentQuote.text}"`;
+        quoteAuthor.textContent = `— ${currentQuote.author}`;
+        quoteText.style.animation = 'fadeInUp 0.6s ease';
+        quoteAuthor.style.animation = 'fadeInUp 0.8s ease';
+        updateFavoriteButton();
+      }, 10);
+    }
+
+    // Check if current quote is favorited
+    function isFavorited() {
+      return favorites.some(fav => fav.text === currentQuote.text);
+    }
+
+    // Update favorite button state
+    function updateFavoriteButton() {
+      const favoriteBtn = document.getElementById('favoriteBtn');
+      const favoriteText = document.getElementById('favoriteText');
+      const heartIcon = document.getElementById('heartIcon');
+      
+      if (isFavorited()) {
+        favoriteBtn.classList.add('favorited');
+        favoriteText.textContent = 'Favorited';
+        heartIcon.classList.add('icon-heart-fill');
+      } else {
+        favoriteBtn.classList.remove('favorited');
+        favoriteText.textContent = 'Add to Favorites';
+        heartIcon.classList.remove('icon-heart-fill');
+      }
+    }
+
+    // Toggle favorite
+    function toggleFavorite() {
+      if (!currentQuote) return;
+      
+      if (isFavorited()) {
+        favorites = favorites.filter(fav => fav.text !== currentQuote.text);
+      } else {
+        favorites.push(currentQuote);
+        createHeartAnimation();
+      }
+      
+      saveFavorites();
+      updateFavoriteButton();
+      renderFavorites();
+    }
+
+    // Create heart animation
+    function createHeartAnimation() {
+      const btn = document.getElementById('favoriteBtn');
+      const rect = btn.getBoundingClientRect();
+      const hearts = ['❤️', '💜', '💖', '💕', '💗'];
+      
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          particle.style.left = (rect.left + rect.width / 2) + 'px';
+          particle.style.top = (rect.top + rect.height / 2) + 'px';
+          particle.style.animationDelay = (i * 0.1) + 's';
+          document.body.appendChild(particle);
+          
+          setTimeout(() => particle.remove(), 2000);
+        }, i * 50);
+      }
+    }
+
+    // Create animations when new quote is generated
+    function createAnimations() {
+      const card = document.querySelector('.quote-card');
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Random animation type
+      const animationType = Math.floor(Math.random() * 4);
+      
+      switch(animationType) {
+        case 0:
+          createConfetti(centerX, centerY);
+          break;
+        case 1:
+          createSparkles(centerX, centerY);
+          break;
+        case 2:
+          createWaves(centerX, centerY);
+          break;
+        case 3:
+          createEmojiExplosion(centerX, centerY);
+          break;
+      }
+    }
+
+    // Confetti animation
+    function createConfetti(x, y) {
+      const colors = ['#ff6b6b', '#f06595', '#cc5de8', '#845ef7', '#5c7cfa', '#339af0', '#22b8cf', '#20c997'];
+      
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = x + 'px';
+        confetti.style.top = y + 'px';
+        confetti.style.animationDelay = (Math.random() * 0.3) + 's';
+        confetti.style.transform = `translateX(${(Math.random() - 0.5) * 400}px) rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    // Sparkles animation
+    function createSparkles(x, y) {
+      for (let i = 0; i < 20; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        const angle = (Math.PI * 2 * i) / 20;
+        const distance = 100 + Math.random() * 100;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        sparkle.style.setProperty('--tx', tx + 'px');
+        sparkle.style.setProperty('--ty', ty + 'px');
+        sparkle.style.animationDelay = (i * 0.05) + 's';
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1500);
+      }
+    }
+
+    // Wave animation
+    function createWaves(x, y) {
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const wave = document.createElement('div');
+          wave.className = 'wave';
+          wave.style.left = (x - 150) + 'px';
+          wave.style.top = (y - 150) + 'px';
+          document.body.appendChild(wave);
+          
+          setTimeout(() => wave.remove(), 1500);
+        }, i * 200);
+      }
+    }
+
+    // Emoji explosion animation
+    function createEmojiExplosion(x, y) {
+      const emojis = ['⭐', '✨', '💫', '🌟', '💥', '🎉', '🎊', '🌈', '🔥', '💡'];
+      
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.animationDelay = (i * 0.05) + 's';
+        
+        const randomX = (Math.random() - 0.5) * 200;
+        particle.style.transform = `translateX(${randomX}px)`;
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 2000);
+      }
+    }
+
+    // Render favorites list
+    function renderFavorites() {
+      const favoritesList = document.getElementById('favoritesList');
+      
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = `
+          <div class="empty-state">
+            <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <p>No favorites yet!</p>
+            <p style="font-size: 16px; margin-top: 10px;">
+              Start adding quotes you love by clicking the heart button.
+            </p>
+          </div>
+        `;
+        return;
+      }
+      
+      favoritesList.innerHTML = favorites.map((quote, index) => `
+        <div class="favorite-item" style="animation-delay: ${index * 0.1}s;">
+          <div class="favorite-text">"${quote.text}"</div>
+          <div class="favorite-author">— ${quote.author}</div>
+          <button class="delete-btn" onclick="removeFavorite(${index})">
+            <svg class="icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Remove favorite
+    function removeFavorite(index) {
+      favorites.splice(index, 1);
+      saveFavorites();
+      renderFavorites();
+      updateFavoriteButton();
+    }
+
+    // Tab switching
+    document.getElementById('dailyTab').addEventListener('click', () => {
+      document.getElementById('dailyTab').classList.add('active');
+      document.getElementById('favoritesTab').classList.remove('active');
+      document.getElementById('quoteView').classList.remove('hidden');
+      document.getElementById('favoritesView').classList.add('hidden');
+    });
+
+    document.getElementById('favoritesTab').addEventListener('click', () => {
+      document.getElementById('favoritesTab').classList.add('active');
+      document.getElementById('dailyTab').classList.remove('active');
+      document.getElementById('favoritesView').classList.remove('hidden');
+      document.getElementById('quoteView').classList.add('hidden');
+    });
+
+    // Event listeners
+    document.getElementById('newQuoteBtn').addEventListener('click', getRandomQuote);
+    document.getElementById('favoriteBtn').addEventListener('click', toggleFavorite);
+
+    // Initialize
+    loadFavorites();
+    getRandomQuote();
+  </script>
+</body>
+</html>
